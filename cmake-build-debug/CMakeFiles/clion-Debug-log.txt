@@ -1,4 +1,0 @@
-C:\Users\Athena\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\223.7571.171\bin\cmake\win\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=C:/Users/Athena/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/223.7571.171/bin/ninja/win/ninja.exe "-DCMAKE_CXX_FLAGS=-Wall -Wextra -Wconversion -Wsign-conversion -pedantic" -G Ninja -S "C:\Users\Athena\OneDrive - HESSO\PRG1\Labos\Labo_08_Snakes" -B "C:\Users\Athena\OneDrive - HESSO\PRG1\Labos\Labo_08_Snakes\cmake-build-debug"
--- Configuring done
--- Generating done
--- Build files have been written to: C:/Users/Athena/OneDrive - HESSO/PRG1/Labos/Labo_08_Snakes/cmake-build-debug

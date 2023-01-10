@@ -1,3 +1,0 @@
-C:/Users/Athena/OneDrive - HESSO/PRG1/Labos/Labo_08_Snakes/cmake-build-debug/CMakeFiles/Labo_08_Snakes.dir
-C:/Users/Athena/OneDrive - HESSO/PRG1/Labos/Labo_08_Snakes/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Athena/OneDrive - HESSO/PRG1/Labos/Labo_08_Snakes/cmake-build-debug/CMakeFiles/rebuild_cache.dir

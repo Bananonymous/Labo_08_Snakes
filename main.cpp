@@ -1,23 +1,40 @@
-/*
------------------------------------------------------------------------------------
-Nom du fichier  : main.cpp
-Auteur(s)       : Léon Surbeck
-Classe          : PRG1B
-Date creation   : < à remplir >
-Description     : < à remplir >
-Remarque(s)     : -
-Compilateur     : Mingw-w64 g++ 12.2.0
------------------------------------------------------------------------------------
-*/
-#include <cstdlib>
 #include <iostream>
+#include <cstdlib>
+#include <vector>
+#include <random>
+#include <algorithm>
+
 #include <SDL.h>
 
-
 using namespace std;
 
-using namespace std;
+//-----------------------------------------------------------------------------
+void drawVector(const vector<int>& v,
+                SDL_Renderer*      renderer,
+                int                height,
+                int                red,
+                int                green) {
 
+    for (size_t i=0; i<v.size(); ++i) {
+
+        // red values
+        if (int(i) == red)
+            SDL_SetRenderDrawColor(renderer, 255,   0,   0, SDL_ALPHA_OPAQUE);
+
+            // green values
+        else if (int(i) == green)
+            SDL_SetRenderDrawColor(renderer,   0, 255,   0, SDL_ALPHA_OPAQUE);
+
+            // others in white
+        else
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+
+        // draw the line
+        SDL_RenderDrawLine(renderer, (int)i, height, (int)i, height - v[i]);
+    }
+}
+
+//-----------------------------------------------------------------------------
 int main(int argc, char* argv[]) {
 
     //--------------------------------------------------------------------------
@@ -26,114 +43,78 @@ int main(int argc, char* argv[]) {
     (void)argv;       // .. to avoid a warning
 
     //--------------------------------------------------------------------------
-    //    Instructions
-    //--------------------------------------------------------------------------
-    cout << "This program is an SDL2 demo."            << endl
-         << " - use the array keys to move the point"  << endl
-         << " - close the window to terminate the app" << endl
-         << endl;
-
-    //--------------------------------------------------------------------------
     //    SDL settings
     //--------------------------------------------------------------------------
+    const int  SCREEN_WIDTH  =  800;
+    const int  SCREEN_HEIGTH =  600;
+    const int  NBRE_VALUES   =   50;
+    const int  SDL_DELAY     =  1;
+
+    // SDL library
     SDL_Window*    window         = nullptr;
     SDL_Renderer*  renderer       = nullptr;
+    SDL_Event      event;
     bool           appIsRunning   = true;
 
-    const int      WINDOW_WIDTH   = 80;
-    const int      WINDOW_HEIGTH  = 50;
-    const int      SCALE          = 10;
-    const int      STEP           =  1;
-
     SDL_Init(SDL_INIT_VIDEO);
-    SDL_CreateWindowAndRenderer(WINDOW_WIDTH  * SCALE,
-                                WINDOW_HEIGTH * SCALE,
-                                SDL_WINDOW_SHOWN,
-                                &window, &renderer);
+    SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGTH, SDL_WINDOW_SHOWN, &window, &renderer);
     if (window == nullptr or renderer == nullptr) {
         cout << "SDL not ready ... quitting" << endl;
-        exit(EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
-
-    SDL_SetWindowTitle(window, "SDL Demo / Moving points");
-    SDL_RenderSetScale(renderer, SCALE, SCALE);
-
-    // point to show
-    SDL_Point point;
-    point.x = WINDOW_WIDTH  / 2;
-    point.y = WINDOW_HEIGTH / 2;
-
+    SDL_RenderSetScale(renderer, (float)SCREEN_WIDTH/(float)NBRE_VALUES, (float)SCREEN_HEIGTH/(float)NBRE_VALUES);
     //--------------------------------------------------------------------------
-    // main loop
-    //--------------------------------------------------------------------------
-    while (appIsRunning) {
 
-        // Events management
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
+    // populate a random vector<int>
+    random_device rd;
+    uniform_int_distribution d(1, NBRE_VALUES);
+    vector<int> v(NBRE_VALUES);
+    for (int& e : v)
+        e = d(rd);
 
-            switch (event.type) {
-                case SDL_QUIT     :  appIsRunning = false;
+    while(appIsRunning) {
+
+        // visualize while sorting the vector<int>
+        // std buble sort
+        for (size_t i=0; appIsRunning and i<v.size() - 1; ++i) {
+
+            for (size_t j=1; j<v.size() - i; ++j) {
+
+                if (v[j - 1] > v [j]) {
+                    swap(v[j - 1], v[j]);
+                }
+
+                //-----------------------------------------------------------------
+                //    SDL drawing
+                //-----------------------------------------------------------------
+                SDL_PollEvent(&event);
+                if (event.type == SDL_QUIT) {
+                    appIsRunning = false;
                     break;
+                }
 
-                    // keyboard API for key pressed
-                case SDL_KEYDOWN  :
-                    switch (event.key.keysym.scancode) {
+                // clear the screen => all black
+                SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+                SDL_RenderClear(renderer);
 
-                        case SDL_SCANCODE_W     :
-                        case SDL_SCANCODE_UP    :  point.y -= STEP;
-                            break;
-                        case SDL_SCANCODE_A     :
-                        case SDL_SCANCODE_LEFT  :  point.x -= STEP;
-                            break;
-                        case SDL_SCANCODE_S     :
-                        case SDL_SCANCODE_DOWN  :  point.y += STEP;
-                            break;
-                        case SDL_SCANCODE_D     :
-                        case SDL_SCANCODE_RIGHT :  point.x += STEP;
-                            break;
-                            // other "unknown" cases
-                        default:                   break;
-                    } // case SDL_KEYDOWN => switch event.key.keysym.scancode
+                // draw the vector                   red     green
+                drawVector(v, renderer, NBRE_VALUES, int(j), int(v.size() - i));
 
-            } // switch event.type
+                // SDL display the window
+                SDL_RenderPresent(renderer);
+                SDL_Delay(SDL_DELAY);
+                //-----------------------------------------------------------------
+            }
+        }
+        appIsRunning = false;
+    }  // app running
 
-        } // while PollEvent
+    cout << "press ENTER to quit ...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        //-----------------------------------------------------------------------
-        // bounderies
-        //-----------------------------------------------------------------------
-        // right boundary
-        if (point.x >= WINDOW_WIDTH)
-            point.x = WINDOW_WIDTH - 1;
-
-        // left boundary
-        if (point.x < 0)
-            point.x = 0;
-
-        // bottom boundary
-        if (point.y >= WINDOW_HEIGTH)
-            point.y = WINDOW_HEIGTH - 1;
-
-        // upper boundary
-        if (point.y < 0)
-            point.y = 0;
-
-        //-----------------------------------------------------------------------
-        // draw the point
-        //-----------------------------------------------------------------------
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-        SDL_RenderClear(renderer);
-
-        SDL_SetRenderDrawColor(renderer, 0, 0, 255, SDL_ALPHA_OPAQUE);
-        SDL_RenderDrawPoint(renderer, point.x, point.y);
-        SDL_RenderPresent(renderer);
-
-    } // app running
-
-    // destroy SDL ressources
-    SDL_DestroyRenderer(renderer);
+    // clear SDL ressources
     SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
     SDL_Quit();
 
     return EXIT_SUCCESS;
