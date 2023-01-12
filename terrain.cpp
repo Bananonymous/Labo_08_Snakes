@@ -7,6 +7,7 @@
 #include "annexe.h"
 #include <vector>
 #include <iostream>
+#include <algorithm>
 
 
 using namespace std;
@@ -48,5 +49,31 @@ void creationSerpents(const size_t nbSerpents, const int largeurTerrain, const i
             else
                 found=false;
         }
+    }
+}
+
+void Terrain::serpentMangeSerpent(vector<Serpent>& v) {
+    for (Serpent &serpent: v) {
+        int teteX = serpent.getCoordX(0);
+        int teteY = serpent.getCoordX(1);
+
+        for (Serpent &serpent2: v) {
+            int serpTete2X = serpent2.getCoordX(0);
+            int serpTete2Y = serpent2.getCoordX(1);
+
+            if(serpTete2X == teteX and serpTete2Y == teteY){
+
+
+            }
+
+            for (vector<int> coords: serpent2.getSerpent()) {
+                if(teteX == coords.at(0) and teteY == coords.at(1) and teteX != serpTete2X){
+                    serpent2.couperSerpent(coords.at(0),coords.at(1));
+                }
+
+            }
+        }
+
+
     }
 }

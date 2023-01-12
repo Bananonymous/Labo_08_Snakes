@@ -18,6 +18,7 @@ public:
     int      getLargeur()      const;
     int      getHauteur()      const;
     size_t   getnbrSerpents()  const;
+    void     serpentMangeSerpent(std::vector<Serpent>& v);
 
 private:
     int        largeur      = 200;

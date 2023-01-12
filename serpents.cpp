@@ -64,7 +64,9 @@ void Serpent::newPomme(int newPommeX,int newPommeY, int newPommeVal){
     valPomme = newPommeVal;
     surPomme = false;
 }
-
+size_t  Serpent::getSerpentSize(){
+    return serpent.size();
+}
 vector<vector<int>> Serpent::getSerpent() {
     return serpent;
 }
