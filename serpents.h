@@ -24,17 +24,20 @@ public:
     int  getPommeX()      const;
     int  getPommeY()      const;
     int  getSerpentID()   const;
-    int  getCoordX();
-    int  getCoordY();
-    void moveSnake();
+    int  getCoordX(size_t i);
+    int  getCoordY(size_t i);
+    std::vector<std::vector<int>> getSerpent();
+    bool pommeTrouvee();
+    void newPomme(int newPommeX,int newPommeY, int newPommeVal);
+    void deplacerSerpent();
 
 private:
     int  ID;
     int  pommeX;
     int  pommeY;
     int  valPomme;
-    std::vector<std::vector<int>> snake;
-
+    bool surPomme = false;
+    std::vector<std::vector<int>> serpent;
 };
 
 

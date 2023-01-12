@@ -4,6 +4,7 @@
 #include "UI.h"
 #include "terrain.h"
 #include "serpents.h"
+#include "annexe.h"
 
 using namespace std;
 
@@ -17,9 +18,8 @@ int main(int argc, char* argv[]) {
 //    int SCREEN_WIDTH  = entreeUser(50, 1200);
 //    int SCREEN_HEIGTH = entreeUser(50, 800);
 //    int NBRE_VALUES   = entreeUser(2 , 1000);
-    int SCREEN_WIDTH  = 500;
-    int SCREEN_HEIGTH = 400;
-    int NBRE_VALUES   = 40;
+    int SCREEN_WIDTH  = 800;
+    int SCREEN_HEIGTH = 800;
     const int SDL_DELAY = 100;
 
     SDL_Window *window = nullptr;
@@ -32,8 +32,7 @@ int main(int argc, char* argv[]) {
     if (window == nullptr or renderer == nullptr) {
         cout << "SDL not ready ... quitting" << endl;
     }
-    SDL_RenderSetScale(renderer, (float) SCREEN_WIDTH / (float) NBRE_VALUES,
-                       (float) SCREEN_HEIGTH / (float) NBRE_VALUES);
+    SDL_RenderSetScale(renderer, (float) SCREEN_WIDTH / 200,(float) SCREEN_HEIGTH/200);
 
 
 
@@ -50,6 +49,7 @@ int main(int argc, char* argv[]) {
 
     while (appIsRunning) {
         SDL_PollEvent(&event);
+
         if (event.type == SDL_QUIT) {
             appIsRunning = false;
             break;
@@ -59,23 +59,35 @@ int main(int argc, char* argv[]) {
         SDL_RenderClear(renderer);
 
 
-        for (Serpent serpent : vecSerpent){
+        for (Serpent &serpent : vecSerpent){
             {
+
+                if(serpent.pommeTrouvee())
+                    serpent.newPomme(aleatoire(0,hauteurTerrain), aleatoire(0,largeurTerrain), aleatoire(1,10));
+
                 SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-                SDL_RenderDrawLine(renderer, serpent.getCoordX(), serpent.getCoordY(), 100, 100);
+
+
+                for(vector<int> coords : serpent.getSerpent()){
+                    SDL_RenderDrawPoint(renderer, coords.at(0), coords.at(1));
+                }
+
+                serpent.deplacerSerpent();
+
+                SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
+                SDL_RenderDrawPoint(renderer, serpent.getPommeX(), serpent.getPommeY());
 
                 SDL_RenderPresent(renderer);
-                SDL_Delay(SDL_DELAY);
                 }
 
         }
-
-        appIsRunning = false;
+        if(nbSerpents <= 1)
+            appIsRunning = false;
     }
 
 
-    cout << "press ENTER to quit ...";
-    cin.ignore();
+//    cout << "press ENTER to quit ...";
+//    cin.ignore();
 
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);

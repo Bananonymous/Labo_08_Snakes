@@ -13,14 +13,18 @@
 */
 
 #include "serpents.h"
+#include "annexe.h"
+#include <algorithm>
+#include <iostream>
 
 using namespace std;
 
 Serpent::Serpent(int IDInput, int X, int Y, int pommeX, int pommeY, int valPomme) {
     ID     = IDInput;
-    snake = {{X,Y}};
+    serpent.resize(10,{X, Y});
     this->pommeX = pommeX;
     this->pommeY = pommeY;
+    this->valPomme = valPomme;
 }
 
 int Serpent::getSerpentID() const {
@@ -35,26 +39,63 @@ int Serpent::getPommeY() const {
     return this->pommeY;
 }
 
-int Serpent::getCoordY() {
-    return snake[0][1];
+int Serpent::getCoordY(size_t i) {
+    std::cout << serpent[5][1] << endl;
+    return serpent[i][1];
 }
 
-int Serpent::getCoordX() {
-    return snake[0][0];
+int Serpent::getCoordX(size_t i) {
+    return serpent[i][0];
 }
 
-void Serpent::moveSnake(){
-        if(abs(pommeX - getCoordX()) > abs(pommeY - getCoordY())){
-            snake[0][0] -= 1;
-        }else{
-            snake[0][1] += 1;
-        }
+bool Serpent::pommeTrouvee(){
+    if(pommeX == getCoordX(0) and pommeY == getCoordY(0)){
+        surPomme = true;
+        size_t taille = serpent.size();
+        serpent.resize(taille+valPomme, serpent.back());
 
-        if(abs(getCoordX() - pommeX) > abs(getCoordY() - pommeY)){
-            snake[0][0] -= 1;
-        }else{
-            snake[0][1] += 1;
-        }
+
+    }
+    return surPomme;
+}
+
+void Serpent::newPomme(int newPommeX,int newPommeY, int newPommeVal){
+    pommeX   = newPommeX;
+    pommeY   = newPommeY;
+    valPomme = newPommeVal;
+    surPomme = false;
+}
+
+vector<vector<int>> Serpent::getSerpent() {
+    return serpent;
+}
+
+void Serpent::deplacerSerpent(){
+
+    if(abs(pommeX - getCoordX(0)) > abs(pommeY - getCoordY(0))){
+        vector<int> temp;
+
+        temp = serpent.front();
+
+        shift_right(serpent.begin(), serpent.end(),1);
+
+        serpent.front() = temp;
+
+        if(pommeX > getCoordX(0))
+            serpent.front()[0] += 1;
+        else
+            serpent.front()[0] -= 1;
+    }else{
+        if(pommeY > getCoordY(0))
+            serpent.front()[1] += 1;
+        else
+            serpent.front()[1] -= 1;
+    }
 
 }
+
+
+
+
+
 

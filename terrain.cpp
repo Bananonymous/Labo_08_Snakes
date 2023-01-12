@@ -3,6 +3,7 @@
 //
 
 #include "terrain.h"
+#include "serpents.h"
 #include "annexe.h"
 #include <vector>
 #include <iostream>
@@ -35,7 +36,7 @@ void creationSerpents(const size_t nbSerpents, const int largeurTerrain, const i
             vecSerpent.emplace_back(int(i), randX, randY, randPommeX, randPommeY, valPomme);
         else {
             for (Serpent& serpent: vecSerpent) {
-                if (serpent.getCoordX() == randX and serpent.getCoordY() == randY) {
+                if (serpent.getCoordX(0) == randX and serpent.getCoordY(0) == randY) {
                     i--;
                     found = true;
                 }
