@@ -63,7 +63,9 @@ int main(int argc, char* argv[]) {
             {
 
                 if(serpent.pommeTrouvee())
-                    serpent.newPomme(aleatoire(0,hauteurTerrain), aleatoire(0,largeurTerrain), aleatoire(1,10));
+                    serpent.newPomme(aleatoire(0,hauteurTerrain),
+                                     aleatoire(0,largeurTerrain),
+                                     aleatoire(1,10));
 
                 SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 
@@ -73,14 +75,16 @@ int main(int argc, char* argv[]) {
                 }
 
                 serpent.deplacerSerpent();
+                terrain.serpentMangeSerpent(vecSerpent);
 
                 SDL_SetRenderDrawColor(renderer, 255, 0, 0, SDL_ALPHA_OPAQUE);
                 SDL_RenderDrawPoint(renderer, serpent.getPommeX(), serpent.getPommeY());
 
-                SDL_RenderPresent(renderer);
                 }
 
         }
+        SDL_RenderPresent(renderer);
+
         if(nbSerpents <= 1)
             appIsRunning = false;
     }

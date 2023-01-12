@@ -39,12 +39,11 @@ int Serpent::getPommeY() const {
     return this->pommeY;
 }
 
-int Serpent::getCoordY(size_t i) {
-    std::cout << serpent[5][1] << endl;
+int Serpent::getCoordY(size_t i) const {
     return serpent[i][1];
 }
 
-int Serpent::getCoordX(size_t i) {
+int Serpent::getCoordX(size_t i) const {
     return serpent[i][0];
 }
 
@@ -70,17 +69,23 @@ vector<vector<int>> Serpent::getSerpent() {
     return serpent;
 }
 
+void Serpent::couperSerpent(int x, int y){
+    vector<int> searchVector{x, y};
+    serpent.erase(find(serpent.begin(), serpent.end(), searchVector),serpent.end());
+    cout << "prout" << endl;
+}
+
 void Serpent::deplacerSerpent(){
 
+    vector<int> temp;
+
+    temp = serpent.front();
+
+    shift_right(serpent.begin(), serpent.end(),1);
+
+    serpent.front() = temp;
+
     if(abs(pommeX - getCoordX(0)) > abs(pommeY - getCoordY(0))){
-        vector<int> temp;
-
-        temp = serpent.front();
-
-        shift_right(serpent.begin(), serpent.end(),1);
-
-        serpent.front() = temp;
-
         if(pommeX > getCoordX(0))
             serpent.front()[0] += 1;
         else

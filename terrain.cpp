@@ -23,6 +23,8 @@ size_t Terrain::getnbrSerpents() const {
     return nbrSerpents;
 }
 
+
+
 void creationSerpents(const size_t nbSerpents, const int largeurTerrain, const int hauteurTerrain, std::vector<Serpent>& vecSerpent){
     bool found = false;
     for (size_t i = 0; i < (nbSerpents); ++i) {
