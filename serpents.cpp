@@ -51,7 +51,7 @@ bool Serpent::pommeTrouvee(){
     if(pommeX == getCoordX(0) and pommeY == getCoordY(0)){
         surPomme = true;
         size_t taille = serpent.size();
-        serpent.resize(taille+valPomme, serpent.back());
+        serpent.resize(taille + size_t(valPomme), serpent.back());
 
 
     }
@@ -71,10 +71,11 @@ vector<vector<int>> Serpent::getSerpent() {
     return serpent;
 }
 
-void Serpent::couperSerpent(int x, int y){
+size_t Serpent::couperSerpent(int x, int y){
     vector<int> searchVector{x, y};
     serpent.erase(find(serpent.begin(), serpent.end(), searchVector),serpent.end());
     cout << "prout" << endl;
+    return taille;
 }
 
 void Serpent::deplacerSerpent(){

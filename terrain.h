@@ -23,7 +23,7 @@ public:
 private:
     int        largeur      = 200;
     int        hauteur      = 200;
-    size_t     nbrSerpents  = 5;
+    size_t     nbrSerpents  = 2;
 };
 
 

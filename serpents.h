@@ -21,12 +21,12 @@
 class Serpent {
 public:
     Serpent          (int IDInput, int X, int Y, int pommeX, int pommeY, int valPomme);
-    int  getPommeX()      const;
-    int  getPommeY()      const;
-    int  getSerpentID()   const;
-    int  getCoordX(size_t i) const;
-    int  getCoordY(size_t i) const;
-    void couperSerpent(int x, int y);
+    int     getPommeX()          const;
+    int     getPommeY()          const;
+    int     getSerpentID()       const;
+    int     getCoordX(size_t i)  const;
+    int     getCoordY(size_t i)  const;
+    size_t  couperSerpent(int x, int y);
     size_t  getSerpentSize();
     std::vector<std::vector<int>> getSerpent();
     bool pommeTrouvee();

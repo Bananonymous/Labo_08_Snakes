@@ -66,9 +66,9 @@ void Terrain::serpentMangeSerpent(vector<Serpent>& v) {
 
             }
 
-            for (vector<int> coords: serpent2.getSerpent()) {
-                if(teteX == coords.at(0) and teteY == coords.at(1) and teteX != serpTete2X){
-                    serpent2.couperSerpent(coords.at(0),coords.at(1));
+            for (vector<int> &coords: serpent2.getSerpent()) {
+                if(teteX == coords.at(0) and teteY == coords.at(1) and serpent.getSerpentID() != serpent2.getSerpentID()){
+                    serpent.serpentGrow(serpent2.couperSerpent(coords.at(0),coords.at(1)));
                 }
 
             }

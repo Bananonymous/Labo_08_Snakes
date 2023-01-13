@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
 //    int NBRE_VALUES   = entreeUser(2 , 1000);
     int SCREEN_WIDTH  = 800;
     int SCREEN_HEIGTH = 800;
-    const int SDL_DELAY = 100;
+    //const int SDL_DELAY = 100;
 
     SDL_Window *window = nullptr;
     SDL_Renderer *renderer = nullptr;
