@@ -1,79 +1,64 @@
-//
-// Created by Athena on 11.01.2023.
-//
+/*
+  -------------------------------------------------------------------------------------------------------------------
+  Fichier     : terrain.cpp
+  Nom du labo : Labo 8 - Snake
+  Auteur(s)   : Auberson Kevin - Surbeck Léon
+  Date        : 11.01.2023
+  But         : Initialisation des fonctions membres de la classe terrain
+
+  Remarque(s) : -
+
+  Compilateur : Mingw-w64 g++ 12.2.0
+  -------------------------------------------------------------------------------------------------------------------
+*/
 
 #include "terrain.h"
-#include "serpents.h"
 #include "annexe.h"
-#include <vector>
 #include <iostream>
-#include <algorithm>
-
 
 using namespace std;
 
-int Terrain::getHauteur() const {
-    return hauteur;
-}
 
-int Terrain::getLargeur() const {
-    return largeur;
+Terrain::Terrain(int hauteur, int largeur, size_t nbrSerpents) {
+    this->hauteur     = hauteur;
+    this->largeur     = largeur;
+    this->nbrSerpents = nbrSerpents;
 }
 
 size_t Terrain::getnbrSerpents() const {
     return nbrSerpents;
 }
 
+void Terrain::reduireNbrSerpents() {
+    nbrSerpents--;
+}
 
+void Terrain::creationSerpents(vector<Serpent>& vecSerpent) const{
+    bool emplacementOccupe = false;
+    for (size_t i = 0; i < (nbrSerpents); ++i) {
+        int valPomme   = aleatoire(10);
+        // Pour les nouvelles coords, on réduit de 1 la larg/haut car le dernier pixel n'est pas visible
+        int randX      = aleatoire(largeur-1);
+        int randY      = aleatoire(hauteur-1);
+        int randPommeX = aleatoire(largeur-1);
+        int randPommeY = aleatoire(hauteur-1);
 
-void creationSerpents(const size_t nbSerpents, const int largeurTerrain, const int hauteurTerrain, std::vector<Serpent>& vecSerpent){
-    bool found = false;
-    for (size_t i = 0; i < (nbSerpents); ++i) {
-        int valPomme   = aleatoire(1, 10);
-        int randX      = aleatoire(1, largeurTerrain);
-        int randY      = aleatoire(1, hauteurTerrain);
-        int randPommeX = aleatoire(1, largeurTerrain);
-        int randPommeY = aleatoire(1, hauteurTerrain);
-
-        if(i == 0)
+        // Vérification de l'emplacement ou le serpent doit apparaître.
+        // Si le i est dans la première boucle, il n'y a pas de vérifications à faire.
+        if(i)
             vecSerpent.emplace_back(int(i), randX, randY, randPommeX, randPommeY, valPomme);
         else {
             for (Serpent& serpent: vecSerpent) {
-                if (serpent.getCoordX(0) == randX and serpent.getCoordY(0) == randY) {
+                if (serpent.getTeteX() == randX and serpent.getTeteY() == randY) {
                     i--;
-                    found = true;
+                    emplacementOccupe = true;
                 }
             }
-            if(!found)
+            if(!emplacementOccupe)
                 vecSerpent.emplace_back(int(i), randX, randY, randPommeX, randPommeY, valPomme);
             else
-                found=false;
+                emplacementOccupe=false;
         }
     }
 }
 
-void Terrain::serpentMangeSerpent(vector<Serpent>& v) {
-    for (Serpent &serpent: v) {
-        int teteX = serpent.getCoordX(0);
-        int teteY = serpent.getCoordX(1);
-
-        for (Serpent &serpent2: v) {
-            int serpTete2X = serpent2.getCoordX(0);
-            int serpTete2Y = serpent2.getCoordX(1);
-
-            if(serpTete2X == teteX and serpTete2Y == teteY){
-
-
-            }
-
-            for (vector<int> &coords: serpent2.getSerpent()) {
-                if(teteX == coords.at(0) and teteY == coords.at(1) and serpent.getSerpentID() != serpent2.getSerpentID()){
-                    serpent.serpentGrow(serpent2.couperSerpent(coords.at(0),coords.at(1)));
-                }
-
-            }
-        }
-
-
-    }
-}

@@ -1,6 +1,16 @@
-//
-// Created by Athena on 11.01.2023.
-//
+/*
+  -------------------------------------------------------------------------------------------------------------------
+  Fichier     : terrain.h
+  Nom du labo : Labo 8 - Snake
+  Auteur(s)   : Auberson Kevin - Surbeck Léon
+  Date        : 11.01.2023
+  But         : Prototypage des fonctions liées au terrain
+
+  Remarque(s) : -
+
+  Compilateur : Mingw-w64 g++ 12.2.0
+  -------------------------------------------------------------------------------------------------------------------
+*/
 
 #ifndef LABO_08_SNAKES_TERRAIN_H
 #define LABO_08_SNAKES_TERRAIN_H
@@ -9,22 +19,32 @@
 #include "serpents.h"
 
 
-
-void creationSerpents(size_t nbSerpents, int largeurTerrain, int hauteurTerrain, std::vector<Serpent>& vecSerpent);
-
 class Terrain {
 
 public:
-    int      getLargeur()      const;
-    int      getHauteur()      const;
-    size_t   getnbrSerpents()  const;
-    void     serpentMangeSerpent(std::vector<Serpent>& v);
+    Terrain(int hauteur, int largeur, size_t nbSerpents);
+
+    /**
+     * Le [[nodiscard]] a du être ajouté pour éviter un warning de l'IDE
+     * @return le nombre de serpents sur le terrain
+     */
+    [[nodiscard]] std::size_t getnbrSerpents() const;
+
+
+    // Soustrait de un le nombre de serpents sur le terrain
+    void reduireNbrSerpents();
+
+    /**
+     * Crée les différents serpents grâce a la largeur et hauteur du terrain
+     * @param vecSerpent
+     */
+    void creationSerpents(std::vector<Serpent> &vecSerpent) const;
+
 
 private:
-    int        largeur      = 200;
-    int        hauteur      = 200;
-    size_t     nbrSerpents  = 2;
+    int largeur;
+    int hauteur;
+    std::size_t nbrSerpents;
 };
-
 
 #endif //LABO_08_SNAKES_TERRAIN_H

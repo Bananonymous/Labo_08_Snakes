@@ -1,29 +1,29 @@
 /*
   -------------------------------------------------------------------------------------------------------------------
-  Fichier     : snakes.cpp
+  Fichier     : serpents.cpp
   Nom du labo : Labo 8 - Snake
   Auteur(s)   : Auberson Kevin - Surbeck Léon
   Date        : 11.01.2023
-  But         :
+  But         : Initialisation des fonctions membres de la classe serpent
 
-  Remarque(s) :
+  Remarque(s) : -
 
   Compilateur : Mingw-w64 g++ 12.2.0
   -------------------------------------------------------------------------------------------------------------------
 */
 
 #include "serpents.h"
-#include "annexe.h"
 #include <algorithm>
 #include <iostream>
 
+
 using namespace std;
 
-Serpent::Serpent(int IDInput, int X, int Y, int pommeX, int pommeY, int valPomme) {
-    ID     = IDInput;
-    serpent.resize(10,{X, Y});
-    this->pommeX = pommeX;
-    this->pommeY = pommeY;
+Serpent::Serpent(int ID, int x, int y, int pommeX, int pommeY, int valPomme) {
+    serpent.resize(10,{x, y});
+    this->ID       = ID;
+    this->pommeX   = pommeX;
+    this->pommeY   = pommeY;
     this->valPomme = valPomme;
 }
 
@@ -39,21 +39,18 @@ int Serpent::getPommeY() const {
     return this->pommeY;
 }
 
-int Serpent::getCoordY(size_t i) const {
-    return serpent[i][1];
+int Serpent::getTeteY() const {
+    return serpent[0][1];
 }
 
-int Serpent::getCoordX(size_t i) const {
-    return serpent[i][0];
+int Serpent::getTeteX() const {
+    return serpent[0][0];
 }
 
-bool Serpent::pommeTrouvee(){
-    if(pommeX == getCoordX(0) and pommeY == getCoordY(0)){
+bool Serpent::trouverPomme(){
+    if(pommeX == getTeteX() and pommeY == getTeteY()){
         surPomme = true;
-        size_t taille = serpent.size();
-        serpent.resize(taille + size_t(valPomme), serpent.back());
-
-
+        this->grandirSerpent(size_t(valPomme),1);
     }
     return surPomme;
 }
@@ -64,22 +61,26 @@ void Serpent::newPomme(int newPommeX,int newPommeY, int newPommeVal){
     valPomme = newPommeVal;
     surPomme = false;
 }
-size_t  Serpent::getSerpentSize(){
+size_t  Serpent::getSerpentSize() const{
     return serpent.size();
 }
-vector<vector<int>> Serpent::getSerpent() {
+vector<vector<int>> Serpent::getSerpent(){
     return serpent;
 }
 
-size_t Serpent::couperSerpent(int x, int y){
-    vector<int> searchVector{x, y};
+size_t Serpent::couperSerpent(const vector<int>& searchVector){
+    auto taille = size_t (distance(find(serpent.begin(), serpent.end(), searchVector),
+                                   serpent.end()));
     serpent.erase(find(serpent.begin(), serpent.end(), searchVector),serpent.end());
-    cout << "prout" << endl;
     return taille;
 }
 
-void Serpent::deplacerSerpent(){
+void Serpent::grandirSerpent(size_t taille, double pourcentage){
+    serpent.resize(size_t(serpent.size() + size_t(double(taille) * pourcentage)) , serpent.back());
+}
 
+
+void Serpent::deplacerSerpent(){
     vector<int> temp;
 
     temp = serpent.front();
@@ -88,22 +89,67 @@ void Serpent::deplacerSerpent(){
 
     serpent.front() = temp;
 
-    if(abs(pommeX - getCoordX(0)) > abs(pommeY - getCoordY(0))){
-        if(pommeX > getCoordX(0))
+    if(abs(pommeX - getTeteX()) > abs(pommeY - getTeteY())){
+        if(pommeX > getTeteX())
             serpent.front()[0] += 1;
         else
             serpent.front()[0] -= 1;
     }else{
-        if(pommeY > getCoordY(0))
+        if(pommeY > getTeteY())
             serpent.front()[1] += 1;
         else
             serpent.front()[1] -= 1;
     }
+}
 
+
+bool Serpent::serpentMangeSerpent(vector<Serpent>& v) {
+    bool serpKill;
+
+    for (Serpent &serpent1: v) {
+        serpKill  = false;
+
+        for (Serpent &serpent2: v) {
+            if(serpent2.getSerpentID() != serpent1.getSerpentID()) {
+                if(serpent1.getTeteX() == serpent2.getTeteX() and serpent1.getTeteY() == serpent2.getTeteY()){
+                    serpent1.grandirSerpent(serpent2.getSerpentSize(), 0.6);
+                    cout << serpent1.getSerpentID() << " killed " << serpent2.getSerpentID() << endl;
+
+                    v.erase(find(v.cbegin(),v.cend(),serpent2));
+
+                    serpKill = true;
+                }
+                if(serpKill) break;
+                else {
+                    for (vector<int> &coords: serpent2.getSerpent()) {
+                        if (serpent1.getTeteX() == coords.at(0) and serpent1.getTeteY() == coords.at(1)) {
+                            size_t taille = serpent2.couperSerpent(coords);
+                            serpent1.grandirSerpent(taille, 0.4);
+                        }
+                    }
+                }
+            }
+        }
+
+        if(serpKill) break;
+    }
+    return serpKill;
 }
 
 
 
+bool Serpent::operator==(const Serpent &rhs) const {
+    return ID == rhs.ID &&
+           pommeX == rhs.pommeX &&
+           pommeY == rhs.pommeY &&
+           valPomme == rhs.valPomme &&
+           surPomme == rhs.surPomme &&
+           serpent == rhs.serpent;
+}
+
+bool Serpent::operator!=(const Serpent &rhs) const {
+    return !(rhs == *this);
+}
 
 
 
